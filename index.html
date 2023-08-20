@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <title>Esteganografia em Imagens</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Esteganografia em Imagens</h1>
+
+            <div class="input-file">
+                <input type="file" id="imageInput" accept="image/*">
+                <label class="inputFile" for="imageInput">Escolha uma imagem</label>
+            </div>
+
+
+            <textarea id="messageInput" placeholder="Digite a mensagem a ser ocultada"></textarea>
+
+            <div class="buttons">
+                <button id="hideButton" style="margin-right: 10px;">Esconder Mensagem</button>
+                <button id="extractButton">Extrair Mensagem</button>
+            </div>
+
+            <a id="downloadLink" style="display: none;">Baixar Imagem</a>
+            <p id="feedback"></p>
+            <div class="img">
+                <img id="imageDisplay" src="" style="max-width: 100%;" rel="img">
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
