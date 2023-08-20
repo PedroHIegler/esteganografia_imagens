@@ -13,11 +13,13 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #010824;
+    color: #fff;
 }
 
 .container{
     width: 100%;
-    max-width: 600px;
+    max-width: 620px;
 }
 
 .container h1{
@@ -30,7 +32,7 @@ body{
 
 .inputFile {
     display: inline-block;
-    background-color: #73787d;
+    background-color: #071383;
     color: #fff;
     padding: 12px 20px;
     border-radius: 5px;
@@ -39,7 +41,7 @@ body{
 }
 
 .inputFile:hover{
-    background-color: #65696c;
+    background-color: #061070;
 }
 
 .input-file{
@@ -55,6 +57,7 @@ textarea{
     border-radius: 5px;
     outline: 0;
     font-size: 16px;
+    resize: vertical;
 }
 
 .buttons{
@@ -68,7 +71,7 @@ button{
     padding: 12px 0;
     border: 0;
     font-size: 16px;
-    background-color: #73787d;
+    background-color: #071383;
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
@@ -78,7 +81,7 @@ button{
 }
 
 button:hover{
-    background-color: #65696c;
+    background-color: #061070;
 }
 
 a{
@@ -90,18 +93,19 @@ a{
 }
 
 p{
-    margin-top: 20px;
+    margin-top: 40px;
     text-align: center;
     font-size: 16px;
+    margin-bottom: 20px;
 }
 
 .img{
     margin: 0 auto;
-    width: 70%;
+    width: 80%;
+    border: 1px solid #fff;
 }
 
 img{
-    padding-top: 30px;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
