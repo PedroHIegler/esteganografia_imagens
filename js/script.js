@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const imageFile = imageInput.files[0];
-      alert(imageFile)
       if (!imageFile) {
           alert('Por favor, selecione uma imagem.');
           return;
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       reader.onload = async (event) => {
           const imageData = new Uint8Array(event.target.result);
           const encodedImageData = await encodeMessage(imageData, message);
-          const encodedBlob = new Blob([encodedImageData], { type: 'image/png' });
+          const encodedBlob = new Blob([encodedImageData], { type: 'image/jpeg' });
           const encodedImageURL = URL.createObjectURL(encodedBlob);
 
           const img = new Image();
@@ -33,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
           feedback.innerHTML = 'Mensagem ocultada com sucesso na imagem.';
 
           downloadLink.href = encodedImageURL;
-          downloadLink.download = 'imagem_esteganografada.png';
+          downloadLink.download = 'imagem_esteganografada.jpeg';
           downloadLink.style.display = 'block';
       };
       reader.readAsArrayBuffer(imageFile);
