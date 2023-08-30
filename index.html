@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="css/style.css">
-        <title>Esteganografia em Imagens</title>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Esteganografia em Imagens</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esteganografia de Imagens</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/script.js" defer></script>
+</head>
+<div>
+    <div class="container">
+        <h1>Esteganografia de Imagens</h1>
 
-            <div class="input-file">
-                <input type="file" id="imageInput" accept="image/*">
-                <label class="inputFile" for="imageInput">Escolha uma imagem</label>
-            </div>
-
-
-            <textarea id="messageInput" placeholder="Digite a mensagem a ser ocultada"></textarea>
-
-            <div class="buttons">
-                <button id="hideButton" style="margin-right: 10px;">Esconder Mensagem</button>
-                <button id="extractButton">Extrair Mensagem</button>
-            </div>
-
-            <a id="downloadLink" style="display: none;">Baixar Imagem</a>
-            <p id="feedback"></p>
-            <div class="img">
-                <img id="imageDisplay" src="" style="max-width: 100%;" rel="img">
-            </div>
+        <div class="input-file">
+            <input type="file" id="imageInput" accept="image/*">
+            <label class="inputFile" for="imageInput">Escolha uma imagem</label>
         </div>
-        <script src="js/script.js"></script>
-    </body>
+
+        <textarea id="messageInput" placeholder="Digite a mensagem a ser escondida"></textarea>
+
+        <div class="buttons">
+            <button id="encodeButton" style="margin-right: 10px;">Esconder Mensagem</button>
+            <button id="decodeButton">Extrair Mensagem</button>
+        </div>
+        
+        <p id="hiddenMessage"></p>
+        <div class="img">
+            <img id="displayedImage" alt="" src="" style="max-width: 100%;" rel="img">
+        </div>
+    </div>
+</body>
 </html>

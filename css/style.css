@@ -10,14 +10,13 @@ html,body{
 }
 
 body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #010824;
     color: #fff;
 }
 
 .container{
+    margin: 200px auto 0 auto;
+    text-align: center;
     width: 100%;
     max-width: 620px;
 }

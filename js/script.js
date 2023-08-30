@@ -1,147 +1,136 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const imageInput = document.getElementById('imageInput');
-  const messageInput = document.getElementById('messageInput');
-  const hideButton = document.getElementById('hideButton');
-  const extractButton = document.getElementById('extractButton');
-  const downloadLink = document.getElementById('downloadLink');
-  const feedback = document.getElementById('feedback');
-  const imageDisplay = document.getElementById('imageDisplay');
-
-  hideButton.addEventListener('click', async () => {
-      const message = messageInput.value;
-      if (!message) {
-          alert('Por favor, digite uma mensagem para ocultar.');
-          return;
+document.addEventListener("DOMContentLoaded", function() {
+    const imageInput = document.getElementById("imageInput");
+    const messageInput = document.getElementById("messageInput");
+    const encodeButton = document.getElementById("encodeButton");
+    const decodeButton = document.getElementById("decodeButton");
+    const hiddenMessage = document.getElementById("hiddenMessage");
+  
+    let originalImage = null;
+    let hasHiddenMessage = false;
+  
+    imageInput.addEventListener("change", function(event) {
+      hiddenMessage.textContent = " ";
+      const file = event.target.files[0];
+      originalImage = URL.createObjectURL(file);
+  
+      const displayedImage = document.getElementById("displayedImage");
+      displayedImage.src = originalImage;
+    });
+  
+  
+  
+    encodeButton.addEventListener("click", function() {
+      if (!originalImage || !messageInput.value) {
+        alert("Selecione uma imagem e digite uma mensagem primeiro.");
+        return;
       }
-
-      const imageFile = imageInput.files[0];
-      if (!imageFile) {
-          alert('Por favor, selecione uma imagem.');
-          return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-          const imageData = new Uint8Array(event.target.result);
-          const encodedImageData = await encodeMessage(imageData, message);
-          const encodedBlob = new Blob([encodedImageData], { type: 'image/jpeg' });
-          const encodedImageURL = URL.createObjectURL(encodedBlob);
-
-          const img = new Image();
-          img.src = encodedImageURL;
-          feedback.innerHTML = 'Mensagem ocultada com sucesso na imagem.';
-
-          downloadLink.href = encodedImageURL;
-          downloadLink.download = 'imagem_esteganografada.jpeg';
-          downloadLink.style.display = 'block';
+  
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.onload = function() {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+  
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const message = messageInput.value;
+        hideMessageInImageData(imageData, message);
+  
+        ctx.putImageData(imageData, 0, 0);
+        const encodedImageData = canvas.toDataURL("image/png");
+        alert("Mensagem escondida na imagem!");
+  
+        // Simulate saving the image
+        const a = document.createElement("a");
+        a.href = encodedImageData;
+        a.download = "encoded_image.png";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       };
-      reader.readAsArrayBuffer(imageFile);
-  });
-
-  extractButton.addEventListener('click', async () => {
-      const imageFile = imageInput.files[0];
-      if (!imageFile) {
-          alert('Por favor, selecione uma imagem para extrair a mensagem.');
-          return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-          const imageData = new Uint8Array(event.target.result);
-          const extractedMessage = await extractMessage(imageData);
-          if (extractedMessage) {
-              feedback.innerHTML = `Mensagem extraída: ${extractedMessage}`;
-          } else {
-              feedback.innerHTML = 'Nenhuma mensagem encontrada na imagem.';
-          }
+      img.src = originalImage;
+    });
+  
+    decodeButton.addEventListener("click", function() {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.onload = function() {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+  
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const decodedMessage = extractMessageFromImageData(imageData);
+        hiddenMessage.textContent = decodedMessage;
       };
-      reader.readAsArrayBuffer(imageFile);
+      img.src = originalImage;
+    });
+  
+    function hideMessageInImageData(imageData, message) {
+      const binaryMessage = textToBinary(message);
+      let messageIndex = 0;
+  
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (messageIndex < binaryMessage.length) {
+          imageData.data[i] = modifyByte(imageData.data[i], binaryMessage.charAt(messageIndex));
+          messageIndex++;
+        } else {
+          break;
+        }
+      }
+    }
+  
+    function extractMessageFromImageData(imageData) {
+      let binaryMessage = "";
+      let charBuffer = "";
+    
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const bit = extractBit(imageData.data[i]);
+        charBuffer += bit;
+    
+        if (charBuffer.length === 8) {
+          const charCode = parseInt(charBuffer, 2);
+          if (charCode === 0) {
+            break; 
+          }
+          binaryMessage += String.fromCharCode(charCode);
+          charBuffer = "";
+        }
+      }
+    
+      return binaryMessage;
+    }
+  
+    function modifyByte(byte, bit) {
+      if (bit === "1") {
+        return byte | 1;
+      } else {
+        return byte & 0xFE;
+      }
+    }
+  
+    function extractBit(byte) {
+      return byte & 1;
+    }
+  
+    function textToBinary(text) {
+      let binary = "";
+      for (let i = 0; i < text.length; i++) {
+        binary += text[i].charCodeAt(0).toString(2).padStart(8, "0");
+      }
+      return binary;
+    }
+  
+    function binaryToText(binary) {
+      let text = "";
+      for (let i = 0; i < binary.length; i += 8) {
+        const byte = binary.substr(i, 8);
+        text += String.fromCharCode(parseInt(byte, 2));
+      }
+      return text;
+    }
   });
-
-  imageInput.addEventListener('change', () => {
-      const imageFile = imageInput.files[0];
-      if (!imageFile) {
-          extractButton.style.display = 'none';
-          imageDisplay.style.display = 'none';
-          return;
-      }
-
-      imageDisplay.src = URL.createObjectURL(imageFile);
-      imageDisplay.style.display = 'block';
-
-      checkForMessage(imageFile).then(containsMessage => {
-          if (containsMessage) {
-              feedback.innerHTML = 'Esta imagem contém uma mensagem oculta.';
-              extractButton.style.display = 'block';
-          } else {
-              feedback.innerHTML = 'Esta imagem não contém uma mensagem oculta.';
-              extractButton.style.display = 'none';
-          }
-      });
-  });
-
-  async function encodeMessage(imageData, message) {
-      // Adicione o tamanho da mensagem como um marcador no início
-      const sizeMarker = new Uint8Array(4);
-      sizeMarker[0] = (message.length >> 24) & 0xFF;
-      sizeMarker[1] = (message.length >> 16) & 0xFF;
-      sizeMarker[2] = (message.length >> 8) & 0xFF;
-      sizeMarker[3] = message.length & 0xFF;
-
-      const messageBytes = new TextEncoder().encode(message);
-      const encodedImageData = new Uint8Array(imageData);
-
-      let byteIndex = 0;
-      // Inclua o tamanho da mensagem como parte dos bytes codificados
-      for (let i = 0; i < 4; i++) {
-          for (let bitIndex = 7; bitIndex >= 0; bitIndex--) {
-              const bit = (sizeMarker[i] >> bitIndex) & 1;
-              encodedImageData[byteIndex] = (encodedImageData[byteIndex] & 0xFE) | bit;
-              byteIndex++;
-          }
-      }
-
-      for (let i = 0; i < messageBytes.length; i++) {
-          for (let bitIndex = 7; bitIndex >= 0; bitIndex--) {
-              const bit = (messageBytes[i] >> bitIndex) & 1;
-              encodedImageData[byteIndex] = (encodedImageData[byteIndex] & 0xFE) | bit;
-              byteIndex++;
-          }
-      }
-
-      return encodedImageData;
-  }
-
-  async function checkForMessage(imageFile) {
-      return new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = async (event) => {
-              const imageData = new Uint8Array(event.target.result);
-              const extractedMessage = await extractMessage(imageData);
-              resolve(extractedMessage !== null && extractedMessage.length > 0);
-          };
-          reader.readAsArrayBuffer(imageFile);
-      });
-  }
-
-  async function extractMessage(imageData) {
-      const extractedBytes = new Uint8Array(imageData.length / 8);
-
-      let byteIndex = 0;
-      for (let i = 0; i < imageData.length; i += 8) {
-          let byte = 0;
-          for (let bitIndex = 0; bitIndex < 8; bitIndex++) {
-              byte = (byte << 1) | (imageData[i + bitIndex] & 1);
-          }
-          extractedBytes[byteIndex] = byte;
-          byteIndex++;
-      }
-
-      const sizeMarker = extractedBytes.subarray(0, 4);
-      const messageSize = (sizeMarker[0] << 24) | (sizeMarker[1] << 16) | (sizeMarker[2] << 8) | sizeMarker[3];
-
-      const extractedMessageBytes = extractedBytes.subarray(4, 4 + messageSize);
-      const extractedMessage = new TextDecoder().decode(extractedMessageBytes);
-      return extractedMessage;
-  }
-});
+  
+  
