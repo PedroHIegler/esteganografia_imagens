@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", function() {
     let hasHiddenMessage = false;
   
     imageInput.addEventListener("change", function(event) {
+      messageInput.style.display = "block";
+      encodeButton.style.display = "block";
+      decodeButton.style.display = "block";
       hiddenMessage.textContent = " ";
       const file = event.target.files[0];
       originalImage = URL.createObjectURL(file);
@@ -41,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const encodedImageData = canvas.toDataURL("image/png");
         alert("Mensagem escondida na imagem!");
   
-        // Simulate saving the image
         const a = document.createElement("a");
         a.href = encodedImageData;
         a.download = "encoded_image.png";
@@ -122,15 +124,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       return binary;
     }
-  
-    function binaryToText(binary) {
-      let text = "";
-      for (let i = 0; i < binary.length; i += 8) {
-        const byte = binary.substr(i, 8);
-        text += String.fromCharCode(parseInt(byte, 2));
-      }
-      return text;
-    }
+
   });
   
   
