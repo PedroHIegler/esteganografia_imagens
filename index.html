@@ -13,9 +13,13 @@
     <div class="container">
         <!--<h1>Esteganografia de Imagens</h1>-->
 
+        <div class="img">
+            <img id="displayedImage" alt="" src="" style="max-width: 100%; display: none;" rel="img">
+        </div>
+
         <div class="input-file">
             <input type="file" id="imageInput" accept="image/*">
-            <label class="inputFile" for="imageInput"><i class="fa-solid fa-upload"></i></label>
+            <label class="inputFile" for="imageInput">Escolha uma imagem</label>
         </div>
 
         <textarea id="messageInput" placeholder="Digite a mensagem a ser escondida" style="display: none;"></textarea>
@@ -26,10 +30,7 @@
         </div>
         
         <p id="hiddenMessage"></p>
-        
-        <div class="img">
-            <img id="displayedImage" alt="" src="" style="max-width: 100%;" rel="img">
-        </div>
+    
     </div>
 </body>
 </html>

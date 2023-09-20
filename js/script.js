@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
       originalImage = URL.createObjectURL(file);
   
       const displayedImage = document.getElementById("displayedImage");
+      displayedImage.style.display = "block";
       displayedImage.src = originalImage;
     });
   
@@ -111,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (bit === "1") {
         return byte | 1;
       } else {
-        return byte & 0xFE;
+        return byte & 0xFE; //x1F
       }
     }
   
