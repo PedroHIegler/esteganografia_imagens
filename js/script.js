@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   
     function modifyByte(byte, bit) {
-      if (bit === "1") {
+      if (bit === "1") { 
         return byte | 1;
       } else {
         return byte & 0xFE; //x1F
