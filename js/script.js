@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const decodedMessage = extractMessageFromImageData(imageData);
         const decodesMessageFinal = decodedMessage.split(":divisor:");
-        hiddenMessage.textContent = decodesMessageFinal[0];
+        hiddenMessage.textContent = "Mensagem: " + decodesMessageFinal[0];
       };
       img.src = originalImage;
     });
